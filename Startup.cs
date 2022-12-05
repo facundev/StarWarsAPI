@@ -1,10 +1,5 @@
 using StarWarsAPI.Core.Repositories;
 using StarWarsAPI.Repositories;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
 namespace StarWarsAPI
@@ -27,6 +22,7 @@ namespace StarWarsAPI
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "StarWarsAPI", Version = "v1" });
+                c.EnableAnnotations();
             });
         }
 

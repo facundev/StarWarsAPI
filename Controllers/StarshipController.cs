@@ -1,6 +1,7 @@
 ﻿using StarWarsAPI.Core.Entities;
 using StarWarsAPI.Core.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace StarWarsAPI.Controllers
 {
@@ -17,52 +18,37 @@ namespace StarWarsAPI.Controllers
             _starshipRepository = starshipRepository;
         }
 
-        /// <summary>
-        /// /// Endpoint encargado de consultar la información de todos las Naves
-        /// </summary>
-        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [SwaggerOperation(Summary = "Devuelve la información de Naves", Description = "Endpoint encargado de consultar la información de todas las Naves")]
         public async Task<IActionResult> Get()
         {
             var starship = await _starshipRepository.GetAll();
             return Ok(starship);
         }
 
-        /// <summary>
-        /// Endpoint encargado de consultar la información de una Nave mediante su Id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [SwaggerOperation(Summary = "Devuelve la información de Naves mediante Id", Description = "Endpoint encargado de consultar la información de una Nave mediante su Id")]
         public async Task<IActionResult> GetById(int id)
         {
             var starship = await _starshipRepository.GetById(id);
             return Ok(starship);
         }
 
-        /// <summary>
-        /// Endpoint encargado de insertar la información de una Nave
-        /// </summary>
-        /// <param name="starship"></param>
-        /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [SwaggerOperation(Summary = "Inserta la información de una Nave", Description = "Endpoint encargado de insertar la información de una Nave")]
         public async Task<IActionResult> Create(Starship starship)
         {
             _ = await _starshipRepository.Create(starship);
             return Ok();
         }
 
-        /// <summary>
-        /// Endpoint encargado de actualizar la información de una Nave
-        /// </summary>
-        /// <param name="starship"></param>
-        /// <returns></returns>
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [SwaggerOperation(Summary = "Actualiza la información de una Nave", Description = "Endpoint encargado de actualizar la información de una Nave")]
         public async Task<IActionResult> Update(Starship starship)
         {
             var currentStarship = await _starshipRepository.GetById(starship.Id);
@@ -74,14 +60,10 @@ namespace StarWarsAPI.Controllers
             return Ok();
         }
 
-        /// <summary>
-        /// Endpoint encargado de eliminar la información de una Nave mediante su Id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [SwaggerOperation(Summary = "Elimina la información de una Nave", Description = "Endpoint encargado de eliminar la información de una Nave")]
         public async Task<IActionResult> Delete(int id)
         {
             var currentStarship = await _starshipRepository.GetById(id);
