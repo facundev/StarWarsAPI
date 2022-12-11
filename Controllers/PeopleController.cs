@@ -1,7 +1,8 @@
-﻿using StarWarsAPI.Core.Entities;
-using StarWarsAPI.Core.Repositories;
+﻿using StarWarsAPI.Core.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Text.Json;
+using StarWarsAPI.Core.Entities;
 
 namespace StarWarsAPI.Controllers
 {
@@ -51,7 +52,7 @@ namespace StarWarsAPI.Controllers
         [SwaggerOperation(Summary = "Actualiza la información de una Persona", Description = "Endpoint encargado de actualizar la información de una Persona")]
         public async Task<IActionResult> Update(People people)
         {
-            var currentPeople = await _peopleRepository.GetById(people.Id);
+            var currentPeople = await _peopleRepository.GetById(people.results[0].Id);
 
             if (currentPeople == null)
                 return BadRequest("People to update not found");
@@ -72,6 +73,74 @@ namespace StarWarsAPI.Controllers
                 return BadRequest("People to delete not found");
 
             _ = await _peopleRepository.Delete(id);
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("insertall")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [SwaggerOperation(Summary = "Devuelve la información de todas las Personas y las inserta en la base de datos", Description = "Endpoint encargado de consultar la información de todas las Personas y las inserta en la base de datos")]
+        public async Task<IActionResult> InsertAll()
+        {
+            People peopleList = new People();
+            HttpClient client = new HttpClient();
+            string PeopleAPI = Constants.People;
+            string responseBody = "";
+
+            try
+            {
+                var response = await client.GetAsync(PeopleAPI);
+                response.EnsureSuccessStatusCode();
+
+                if (response.IsSuccessStatusCode)
+                    responseBody = await response.Content.ReadAsStringAsync();
+
+                if (responseBody != null)
+                    peopleList = JsonSerializer.Deserialize<People>(responseBody);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            if (peopleList.results.Length <= 0)
+                return BadRequest("Number of people cannot be less than zero");
+
+            _ = await _peopleRepository.InsertAll(peopleList.results);
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("updateall")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [SwaggerOperation(Summary = "Actualiza la información de todas las Personas", Description = "Endpoint encargado de actualizar la información de una lista de Personas")]
+        public async Task<IActionResult> UpdateAll()
+        {
+            People peopleList = new People();
+            HttpClient client = new HttpClient();
+            string PeopleAPI = Constants.People;
+            string responseBody = "";
+
+            try
+            {
+                var response = await client.GetAsync(PeopleAPI);
+                response.EnsureSuccessStatusCode();
+
+                if (response.IsSuccessStatusCode)
+                    responseBody = await response.Content.ReadAsStringAsync();
+
+                if (responseBody != null)
+                    peopleList = JsonSerializer.Deserialize<People>(responseBody);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            if (peopleList.results.Length <= 0)
+                return BadRequest("Number of people cannot be less than zero");
+
+            _ = await _peopleRepository.UpdateAll(peopleList.results);
             return Ok();
         }
     }
