@@ -8,5 +8,7 @@ namespace StarWarsAPI.Core.Repositories
         Task<int> Create(Planet planet);
         Task<int> Update(Planet planet);
         Task<int> Delete(int id);
+        Task<int> InsertAll(PlanetsList[] planetsList);
+        Task<int> UpdateAll(PlanetsList[] planetsList);
     }
 }

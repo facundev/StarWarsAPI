@@ -7,10 +7,10 @@ namespace StarWarsAPI.Core.Entities
         public int count { get; set; }
         public string next { get; set; }
         public object previous { get; set; }
-        public Result[] results { get; set; }
+        public PeopleList[] results { get; set; }
     }
 
-    public class Result
+    public class PeopleList
     {
         [JsonPropertyName("id")]
         public int Id { get; set; }

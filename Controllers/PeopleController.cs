@@ -84,12 +84,11 @@ namespace StarWarsAPI.Controllers
         {
             People peopleList = new People();
             HttpClient client = new HttpClient();
-            string PeopleAPI = Constants.People;
             string responseBody = "";
 
             try
             {
-                var response = await client.GetAsync(PeopleAPI);
+                var response = await client.GetAsync(Constants.People);
                 response.EnsureSuccessStatusCode();
 
                 if (response.IsSuccessStatusCode)
@@ -118,12 +117,11 @@ namespace StarWarsAPI.Controllers
         {
             People peopleList = new People();
             HttpClient client = new HttpClient();
-            string PeopleAPI = Constants.People;
             string responseBody = "";
 
             try
             {
-                var response = await client.GetAsync(PeopleAPI);
+                var response = await client.GetAsync(Constants.People);
                 response.EnsureSuccessStatusCode();
 
                 if (response.IsSuccessStatusCode)

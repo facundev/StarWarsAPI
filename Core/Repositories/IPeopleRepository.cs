@@ -8,7 +8,7 @@ namespace StarWarsAPI.Core.Repositories
         Task<int> Create(People people);
         Task<int> Update(People people);
         Task<int> Delete(int id);
-        Task<int> InsertAll(Result[] peopleList);
-        Task<int> UpdateAll(Result[] peopleList);
+        Task<int> InsertAll(PeopleList[] peopleList);
+        Task<int> UpdateAll(PeopleList[] peopleList);
     }
 }

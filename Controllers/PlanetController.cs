@@ -2,6 +2,7 @@
 using StarWarsAPI.Core.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Text.Json;
 
 namespace StarWarsAPI.Controllers
 {
@@ -51,7 +52,7 @@ namespace StarWarsAPI.Controllers
         [SwaggerOperation(Summary = "Actualiza la información de un Planeta", Description = "Endpoint encargado de actualizar la información de un Planeta")]
         public async Task<IActionResult> Update(Planet planet)
         {
-            var currentPlanet = await _planetRepository.GetById(planet.Id);
+            var currentPlanet = await _planetRepository.GetById(planet.results[0].Id);
 
             if (currentPlanet == null)
                 return BadRequest("Planet to update not found");
@@ -72,6 +73,71 @@ namespace StarWarsAPI.Controllers
                 return BadRequest("Planet to delete not found");
 
             _ = await _planetRepository.Delete(id);
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("insertall")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> InsertAll()
+        {
+            Planet planetsList = new Planet();
+            HttpClient client = new HttpClient();
+            string responseBody = "";
+
+            try
+            {
+                var response = await client.GetAsync(Constants.Planets);
+                response.EnsureSuccessStatusCode();
+
+                if (response.IsSuccessStatusCode)
+                    responseBody = await response.Content.ReadAsStringAsync();
+
+                if (responseBody != null)
+                    planetsList = JsonSerializer.Deserialize<Planet>(responseBody);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            if (planetsList.results.Length <= 0)
+                return BadRequest("Number of planets cannot be less than zero");
+
+            _ = await _planetRepository.InsertAll(planetsList.results);
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("updateall")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [SwaggerOperation(Summary = "Actualiza la información de todos los Planetas", Description = "Endpoint encargado de actualizar la información de una lista de Planetas")]
+        public async Task<IActionResult> UpdateAll()
+        {
+            Planet planetsList = new Planet();
+            HttpClient client = new HttpClient();
+            string responseBody = "";
+
+            try
+            {
+                var response = await client.GetAsync(Constants.Planets);
+                response.EnsureSuccessStatusCode();
+
+                if (response.IsSuccessStatusCode)
+                    responseBody = await response.Content.ReadAsStringAsync();
+
+                if (responseBody != null)
+                    planetsList = JsonSerializer.Deserialize<Planet>(responseBody);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            if (planetsList.results.Length <= 0)
+                return BadRequest("Number of planets cannot be less than zero");
+
+            _ = await _planetRepository.UpdateAll(planetsList.results);
             return Ok();
         }
     }

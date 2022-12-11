@@ -17,6 +17,11 @@ namespace StarWarsAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IPeopleRepository, PeopleRepository>();
+            services.AddTransient<IPlanetRepository, PlanetRepository>();
+            services.AddTransient<IFilmRepository, FilmRepository>();
+            services.AddTransient<IVehicleRepository, VehicleRepository>();
+            services.AddTransient<IStarshipRepository, StarshipRepository>();
+            services.AddTransient<ISpecieRepository, SpecieRepository>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

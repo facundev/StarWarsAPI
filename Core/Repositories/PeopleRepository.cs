@@ -70,7 +70,7 @@ namespace StarWarsAPI.Repositories
             return affectedRows;
         }
 
-        public async Task<int> InsertAll(Result[] peopleList)
+        public async Task<int> InsertAll(PeopleList[] peopleList)
         {
             using var connection = new MySqlConnection(_connectionString);
             connection.Open();
@@ -130,13 +130,14 @@ namespace StarWarsAPI.Repositories
             return affectedRows;
         }
 
-        public async Task<int> UpdateAll(Result[] peopleList)
+        public async Task<int> UpdateAll(PeopleList[] peopleList)
         {
             using var connection = new MySqlConnection(_connectionString);
             connection.Open();
             MySqlCommand cmd = new MySqlCommand("UPDATE PeopleFilms SET Name=@Name, Film=@Film WHERE People=@Name", connection);
             var sql = "";
 
+            // Code block used to loop through the list of People
             for (int i = 0; i < peopleList.Length; i++)
             {
                 sql = @"UPDATE People SET Name=@Name, Height=@Height, Mass=@Mass, HairColor=@HairColor, 
